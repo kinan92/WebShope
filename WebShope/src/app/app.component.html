@@ -1,0 +1,35 @@
+﻿<div class="row" >
+    <div class="col-md-4" >
+        <table  >
+            <tr *ngFor="let item of products" (click)="onSelect(item)"  >
+                <td  id="image">
+                    <img src="{{item.Image}}" title="{{item.Name}}" height="100px" width="col-md-2" />
+                </td>
+
+            </tr>
+        </table>
+    </div>
+    <div *ngIf="selecteimage" class="col-md-8" >
+        <div id="st">
+            <div>
+                <img src="{{selecteimage.Image}}" size="full" />
+            </div>
+            <div>
+                <p>{{selecteimage.Name}}</p>
+            </div>
+            <div>
+                <p>{{selecteimage.Price | currency : 'sek' :true:'1.2-2' }}</p>
+            </div>
+            <div>
+                <p>{{selecteimage.Info}}</p>
+            </div>
+            <a herf="#">
+            <button  *ngIf="AuthStatus" class="glyphicon glyphicon-shopping-cart" (click)="onClick(selecteimage)"></button>
+            </a>
+            <div  *ngIf="!AuthStatus">
+                <p>If you Want to bye it Login</p>
+                <button (click)="GetAuthStatus()">Refrech</button>
+            </div>
+        </div>
+    </div>
+</div>

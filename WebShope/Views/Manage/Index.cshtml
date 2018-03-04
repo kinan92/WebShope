@@ -83,5 +83,44 @@
                     }
                 }*@
         </dd>
+        <dt>
+            @Html.DisplayNameFor(Model => Model.FirstName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(Model => Model.FirstName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(Model => Model.LastName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(Model=> Model.LastName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(Model=> Model.PhoneNumber)
+        </dt>
+        <dd>
+            @Html.DisplayFor(Model => Model.PhoneNumber)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(Model => Model.Email)
+        </dt>
+        <dd>
+            @Html.DisplayFor(Model => Model.Email)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(Model => Model.Age)
+        </dt>
+        <dd>
+            @Html.DisplayFor(Model => Model.Age)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(Model => Model.Adress)
+        </dt>
+        <dd>
+            @Html.DisplayFor(Model => Model.Adress)
+        </dd>
     </dl>
 </div>
+<dt>
+    @Html.ActionLink("Edit", "EditInfo", "Manage")
+</dt>

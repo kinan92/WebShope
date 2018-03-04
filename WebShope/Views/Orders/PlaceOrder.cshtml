@@ -1,0 +1,58 @@
+﻿@model WebShope.Models.Order
+
+@{
+    ViewBag.Title = "PlaceOrder";
+}
+
+<h2>PlaceOrder</h2>
+
+<div>
+    <h4>Order</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Id)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Id)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.OrderDate)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.OrderDate)
+        </dd>
+    </dl>
+
+    <div class="table-condensed">
+        @foreach (var item in Model.OrderItems)
+        {
+            <dl class="dl-horizontal">
+                <dt>@Html.DisplayNameFor(Model => item.Product.Name) :</dt>
+                <dd>@Html.DisplayFor(Model => item.Product.Name)</dd>
+
+                <dt>@Html.DisplayNameFor(Model => item.Amount) :</dt>
+                <dd>@Html.DisplayFor(Model => item.Amount)</dd>
+
+                <dt>@Html.DisplayNameFor(Model => item.Product.Info) :</dt>
+                <dd>@Html.DisplayFor(Model => item.Product.Info)</dd>
+
+                <dt>@Html.DisplayNameFor(Model => item.Price) :</dt>
+                <dd>@Html.DisplayFor(Model => item.Price)</dd>
+            </dl>
+        }
+        <div>
+            @{
+                var to = 0;
+                foreach (var item in Model.OrderItems)
+                {
+                    to = to + (item.Amount * item.Product.Price);
+                }
+            }
+            <h2>Total Price : @(to)kr</h2>
+        </div>
+    </div>
+</div>
+<p>
+    @Html.ActionLink("Back to List", "Index")
+</p>

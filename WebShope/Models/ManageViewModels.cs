@@ -12,6 +12,48 @@ namespace WebShope.Models
         public string PhoneNumber { get; set; }
         public bool TwoFactor { get; set; }
         public bool BrowserRemembered { get; set; }
+        //
+        [Range(maximum: 150, minimum: 0)]
+        [DataType(DataType.DateTime)]
+        public int Age { get; set; }
+
+        [Required(AllowEmptyStrings = false)]
+        [MaxLength(length: 40)]
+        [MinLength(length: 2)]
+        [Display(Name = "First Name")]
+        public string FirstName { get; set; }
+
+        [Required]
+        [MaxLength(length: 40)]
+        [MinLength(length: 2)]
+        [Display(Name = "Last Name")]
+        public string LastName { get; set; }
+
+        public string Adress { get; set; }
+        public string Email { get; set; }
+        //
+    }
+
+    public class IndexEditModel
+    {
+        [Range(maximum: 150, minimum: 0)]
+        [DataType(DataType.DateTime)]
+        public int Age { get; set; }
+
+        [Required(AllowEmptyStrings = false)]
+        [MaxLength(length: 40)]
+        [MinLength(length: 2)]
+        [Display(Name = "First Name")]
+        public string FirstName { get; set; }
+
+        [Required]
+        [MaxLength(length: 40)]
+        [MinLength(length: 2)]
+        [Display(Name = "Last Name")]
+        public string LastName { get; set; }
+
+        public string Adress { get; set; }
+        public string Email { get; set; }
     }
 
     public class ManageLoginsViewModel

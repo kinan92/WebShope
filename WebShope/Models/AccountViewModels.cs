@@ -49,9 +49,9 @@ namespace WebShope.Models
     public class LoginViewModel
     {
         [Required]
-        [Display(Name = "Email")]
-        [EmailAddress]
-        public string Email { get; set; }
+        [Display(Name = "User Name")]
+        
+        public string UserName { get; set; }
 
         [Required]
         [DataType(DataType.Password)]
@@ -65,8 +65,27 @@ namespace WebShope.Models
     public class RegisterViewModel
     {
         [Required]
+        [Display(Name = "Username")]
+        public string Username { get; set; }
+
+        [Required]
+        [StringLength(40, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 2)]
+        [Display(Name = "First Name")]
+        public string Firstname { get; set; }
+
+        [Required]
+        [StringLength(40, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 2)]
+        [Display(Name = "Last Name")]
+        public string Lastname { get; set; }
+
+        [Required]
+        [Range(minimum: 0, maximum: 150)]
+        [Display(Name = "Age")]
+        public int Age { get; set; }
+
         [EmailAddress]
-        [Display(Name = "Email")]
+        [Required(ErrorMessage = "An email address is required")]
+        [Display(Name = "Your e-mail :")]
         public string Email { get; set; }
 
         [Required]
@@ -79,6 +98,14 @@ namespace WebShope.Models
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+
+        [Required(ErrorMessage = "A phone number is required")]
+        [DataType(DataType.PhoneNumber)]
+        [Display(Name = "Phone Number")]
+        [Phone(ErrorMessage = "Invalid Phone Number")]
+        public string PhoneNumber { get; set; }
+
+        
     }
 
     public class ResetPasswordViewModel

@@ -16,6 +16,8 @@ namespace WebShope.Controllers
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
 
+        ApplicationDbContext db = new ApplicationDbContext();
+
         public ManageController()
         {
         }
@@ -64,15 +66,59 @@ namespace WebShope.Controllers
                 : "";
 
             var userId = User.Identity.GetUserId();
+            var userData = db.Users.SingleOrDefault(u => u.Id == userId);    //////////////////////////////// look
             var model = new IndexViewModel
             {
                 HasPassword = HasPassword(),
                 PhoneNumber = await UserManager.GetPhoneNumberAsync(userId),
                 TwoFactor = await UserManager.GetTwoFactorEnabledAsync(userId),
                 Logins = await UserManager.GetLoginsAsync(userId),
-                BrowserRemembered = await AuthenticationManager.TwoFactorBrowserRememberedAsync(userId)
+                BrowserRemembered = await AuthenticationManager.TwoFactorBrowserRememberedAsync(userId),
+                FirstName = userData.FirstName,
+                LastName = userData.LastName,
+                Age = userData.Age,
+                Adress = userData.Adress,
+                Email = userData.Email
             };
             return View(model);
+
+        }
+
+        public ActionResult EditInfo()
+        {
+            var userId = User.Identity.GetUserId();
+            var userData = UserManager.FindById(userId);
+
+            var model = new IndexViewModel
+            {
+                FirstName = userData.FirstName,
+                LastName = userData.LastName,
+                Age = userData.Age,
+                Adress = userData.Adress,
+                Email = userData.Email
+                
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult EditInfo(IndexViewModel inf)
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+
+
+            var userId = User.Identity.GetUserId();
+            var userData = db.Users.SingleOrDefault(u => u.Id == userId);
+
+            userData.FirstName = inf.FirstName;
+            userData.LastName = inf.LastName;
+            userData.Adress = inf.Adress;
+            userData.Age = inf.Age;
+            userData.Email = inf.Email;
+
+            db.SaveChanges();
+            return RedirectToAction("Index");
         }
 
         //

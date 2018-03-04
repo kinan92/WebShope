@@ -1,0 +1,22 @@
+﻿@model WebShope.Models.ApplicationUser
+
+@using (Ajax.BeginForm("AjaxEditUsers", "Account",
+                                   new AjaxOptions
+                                   {
+                                       InsertionMode = InsertionMode.Replace,
+                                       UpdateTargetId = $"SelectedUser"
+
+                                   }, new { @class = "form-horizontal" }))
+{
+    <div class="form-group">
+        <div class="col-md-10">
+            @Html.DropDownListFor(m => m.Id, new SelectList(ViewBag.user, "value", "text"), new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Select" class="btn btn-default" />
+        </div>
+    </div>
+}
+<div id="SelectedUser"></div>

@@ -9,6 +9,8 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using WebShope.Models;
+using Microsoft.AspNet.Identity.EntityFramework;
+using System.Collections.Generic;
 
 namespace WebShope.Controllers
 {
@@ -17,6 +19,9 @@ namespace WebShope.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+
+
+        ApplicationDbContext db = new ApplicationDbContext();
 
         public AccountController()
         {
@@ -75,7 +80,7 @@ namespace WebShope.Controllers
 
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, change to shouldLockout: true
-            var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
+            var result = await SignInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, shouldLockout: false);
             switch (result)
             {
                 case SignInStatus.Success:
@@ -139,6 +144,7 @@ namespace WebShope.Controllers
         [AllowAnonymous]
         public ActionResult Register()
         {
+
             return View();
         }
 
@@ -151,7 +157,7 @@ namespace WebShope.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var user = new ApplicationUser { UserName = model.Username, FirstName = model.Firstname, LastName = model.Lastname, Age = model.Age, PhoneNumber = model.PhoneNumber, Email = model.Email };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
@@ -171,7 +177,69 @@ namespace WebShope.Controllers
             // If we got this far, something failed, redisplay form
             return View(model);
         }
+        [Authorize(Roles = "IamTheAdmin")]
+        public ActionResult EditUsers()
+        {
+            //var userStore = new UserStore<ApplicationUser>(db);
+            //var userManager = new UserManager<ApplicationUser>(userStore);
 
+            List<SelectListItem> list = new List<SelectListItem>();
+
+            foreach (var user in UserManager.Users)
+            {
+                list.Add(new SelectListItem() { Value = user.Id , Text = user.FirstName + ' ' + user.LastName});
+            }
+            
+            ViewBag.user = list;
+            return View();
+        }
+        [HttpPost]
+        [Authorize(Roles = "IamTheAdmin")]
+        public ActionResult EditUsers(ApplicationUser applicationUser , string Roles)
+        {
+            var user = db.Users.SingleOrDefault(u => u.Id == applicationUser.Id);
+            user.FirstName = applicationUser.FirstName;
+            user.LastName = applicationUser.LastName;
+            user.UserName = applicationUser.UserName;
+            user.PhoneNumber = applicationUser.PhoneNumber;
+            user.Email = applicationUser.Email;
+            user.Adress = applicationUser.Adress;
+            user.Age = applicationUser.Age;
+
+            bool notFound = true;
+            foreach (var item in user.Roles)
+            {
+                if (item.RoleId == Roles)
+                {
+                    notFound = false;
+                    break;
+                }
+            }
+            if (notFound)
+            {
+                var roleStore = new RoleStore<IdentityRole>(db);
+                var roleManager = new RoleManager<IdentityRole>(roleStore);
+                var role = roleManager.FindById(Roles);
+                UserManager.AddToRole(user.Id, role.Name);
+            }
+
+
+            db.SaveChanges();
+
+            return RedirectToAction("EditUsers");
+        }
+        public ActionResult AjaxEditUsers(string Id)
+        {
+            var roleStore = new RoleStore<IdentityRole>(db);
+            var roleManager = new RoleManager<IdentityRole>(roleStore);
+            List<SelectListItem> list = new List<SelectListItem>();
+            foreach (var role in roleManager.Roles)
+            {
+                list.Add(new SelectListItem() { Value = role.Id, Text = role.Name });
+            }
+            ViewBag.Roles = list;
+            return PartialView("_AjaxEditUsers",UserManager.FindById(Id));
+        }
         //
         // GET: /Account/ConfirmEmail
         [AllowAnonymous]
